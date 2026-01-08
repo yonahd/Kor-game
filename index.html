@@ -83,6 +83,14 @@
         .input-glow:focus {
             box-shadow: 0 0 20px rgba(50, 108, 229, 0.3);
         }
+
+        /* Animated background for start screen */
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, rgba(50, 108, 229, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(50, 108, 229, 0.05) 1px, transparent 1px);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center relative selection:bg-blue-500 selection:text-white">
@@ -144,25 +152,33 @@
             </div>
         </div>
 
-        <!-- Start Overlay -->
-        <div id="startScreen" class="absolute top-24 left-0 right-0 z-50 flex justify-center">
-            <div class="bg-slate-900 border border-slate-700 p-8 rounded-xl shadow-2xl text-center max-w-md mx-4 w-full">
-                <div class="text-4xl mb-4">☸️</div>
-                <h2 class="text-2xl font-bold text-white mb-2">Ready to deploy?</h2>
-                <p class="text-slate-400 mb-6 text-sm">Type as many Kubernetes resources as you can in 90 seconds.</p>
+        <!-- Start Overlay (Full Screen) -->
+        <div id="startScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 grid-bg">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-slate-900 pointer-events-none"></div>
+            
+            <div class="relative bg-slate-800/80 backdrop-blur-xl border border-slate-700 p-10 md:p-14 rounded-2xl shadow-2xl text-center max-w-2xl w-full mx-6 overflow-hidden">
+                <!-- Decorative top glow -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-500"></div>
                 
-                <div class="mb-6">
+                <div class="text-6xl mb-6 animate-bounce">☸️</div>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">K8s Resource Blitz</h1>
+                <p class="text-slate-400 mb-8 text-lg">You have <span class="text-blue-400 font-bold">90 seconds</span>. How many API resources can you name? (Pods, Svc, etc.)</p>
+                
+                <div class="mb-8 max-w-md mx-auto">
+                    <label class="block text-xs text-left text-slate-400 mb-2 uppercase tracking-wide">Operator Name</label>
                     <input type="text" id="usernameInput" placeholder="Enter Username" 
-                        class="w-full bg-slate-800 text-white p-3 rounded border border-slate-600 focus:border-blue-500 outline-none text-center">
+                        class="w-full bg-slate-900 text-white text-lg p-4 rounded-lg border border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all text-center">
                 </div>
 
-                <button onclick="startGame()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-lg transition-all transform hover:scale-105 shadow-lg shadow-blue-600/25 mb-6">
-                    Start Cluster
+                <button onclick="startGame()" class="w-full max-w-md bg-blue-600 hover:bg-blue-500 text-white font-bold text-xl py-4 px-8 rounded-lg transition-all transform hover:scale-105 shadow-xl shadow-blue-600/20 mb-10">
+                    Initialize Cluster
                 </button>
 
-                <div class="border-t border-slate-800 pt-4">
-                    <div class="text-xs text-slate-500 uppercase tracking-wide">Powered by</div>
-                    <div class="text-blue-400 font-bold tracking-tight">korpro.io</div>
+                <div class="border-t border-slate-700 pt-6">
+                    <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Powered by</div>
+                    <a href="https://korpro.io" target="_blank" class="text-blue-400 hover:text-white font-bold tracking-tight text-lg transition-colors hover:underline">
+                        korpro.io
+                    </a>
                 </div>
             </div>
         </div>
@@ -209,7 +225,7 @@
             </div>
             
             <div class="mt-6 text-[10px] text-slate-600 uppercase tracking-wider">
-                Powered by korpro.io
+                Powered by <a href="https://korpro.io" target="_blank" class="text-blue-400 hover:text-white transition-colors">korpro.io</a>
             </div>
         </div>
     </div>
@@ -533,4 +549,3 @@
 </body>
 </html>
 
- 
