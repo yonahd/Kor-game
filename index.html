@@ -8,21 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --k8s-blue: #326CE5;
-            --terminal-bg: #1e1e1e;
             --terminal-text: #d4d4d4;
-            --success-green: #4ade80;
-            --neon-blue: #60a5fa;
-            --linkedin-blue: #0077b5;
         }
-        
         body {
             font-family: 'JetBrains Mono', monospace;
             background-color: #0f172a;
             color: var(--terminal-text);
             overflow-x: hidden;
         }
-
         .scan-line {
             width: 100%;
             height: 100px;
@@ -34,63 +27,31 @@
             animation: scanline 10s linear infinite;
             pointer-events: none;
         }
-
         @keyframes scanline {
             0% { bottom: 100%; }
             100% { bottom: -100px; }
         }
-
         .resource-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
         @keyframes popIn {
             from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
-
-        .shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-        }
-
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-
-        .progress-bar-fill {
-            transition: width 1s linear;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569; 
-        }
-
-        .input-glow:focus {
-            box-shadow: 0 0 20px rgba(50, 108, 229, 0.3);
-        }
-
-        /* Animated background for start screen */
         .grid-bg {
             background-size: 40px 40px;
             background-image:
                 linear-gradient(to right, rgba(50, 108, 229, 0.05) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(50, 108, 229, 0.05) 1px, transparent 1px);
         }
+        .input-glow:focus {
+            box-shadow: 0 0 20px rgba(50, 108, 229, 0.3);
+        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center relative selection:bg-blue-500 selection:text-white">
@@ -99,7 +60,7 @@
 
     <!-- Header -->
     <header class="w-full max-w-4xl p-6 flex flex-col md:flex-row justify-between items-center z-20 border-b border-slate-800 bg-slate-900/50 backdrop-blur-sm sticky top-0">
-        <div class="flex items-center gap-3 mb-4 md:mb-0">
+        <div class="flex items-center gap-3 mb-4 md:mb-0 cursor-pointer" onclick="resetGame()">
             <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
             </div>
@@ -157,12 +118,11 @@
             <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-slate-900 pointer-events-none"></div>
             
             <div class="relative bg-slate-800/80 backdrop-blur-xl border border-slate-700 p-10 md:p-14 rounded-2xl shadow-2xl text-center max-w-2xl w-full mx-6 overflow-hidden">
-                <!-- Decorative top glow -->
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-500"></div>
                 
                 <div class="text-6xl mb-6 animate-bounce">☸️</div>
                 <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">K8s Resource Blitz</h1>
-                <p class="text-slate-400 mb-8 text-lg">You have <span class="text-blue-400 font-bold">90 seconds</span>. How many API resources can you name? (Pods, Svc, etc.)</p>
+                <p class="text-slate-400 mb-8 text-lg">You have <span class="text-blue-400 font-bold">90 seconds</span>. Name as many K8s resources as you can.</p>
                 
                 <div class="mb-8 max-w-md mx-auto">
                     <label class="block text-xs text-left text-slate-400 mb-2 uppercase tracking-wide">Operator Name</label>
@@ -184,9 +144,7 @@
         </div>
 
         <!-- Results Grid -->
-        <div id="resultsGrid" class="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 content-start pb-20">
-            <!-- Cards injected here -->
-        </div>
+        <div id="resultsGrid" class="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 content-start pb-20"></div>
 
     </main>
 
@@ -208,20 +166,16 @@
 
             <!-- Buttons -->
             <div class="flex flex-col gap-3">
+                <button onclick="shareOnLinkedIn()" class="bg-[#0077b5] hover:bg-[#006097] text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 w-full shadow-lg shadow-blue-900/20">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    Share Score on LinkedIn
+                </button>
+                
                 <div class="flex gap-3 justify-center">
                     <button onclick="resetGame()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-6 rounded-lg transition-colors w-full">
                         Retry
                     </button>
-                    <button onclick="copyToClipboard()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 w-full">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                        Copy
-                    </button>
                 </div>
-                
-                <button onclick="shareOnLinkedIn()" class="bg-[#0077b5] hover:bg-[#006097] text-white font-bold py-2 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 w-full">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                    Share on LinkedIn
-                </button>
             </div>
             
             <div class="mt-6 text-[10px] text-slate-600 uppercase tracking-wider">
@@ -230,16 +184,22 @@
         </div>
     </div>
 
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white px-4 py-2 rounded-lg border border-slate-700 transform translate-y-24 transition-transform duration-300 flex items-center gap-2 shadow-xl z-50">
-        <span id="toastIcon">📋</span>
-        <span id="toastMsg">Copied to clipboard!</span>
+    <!-- Hidden Canvas for Screenshot Generation -->
+    <canvas id="scoreCanvas" width="800" height="400" class="hidden"></canvas>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700 transform translate-y-32 transition-transform duration-300 flex items-center gap-3 shadow-xl z-50 max-w-sm">
+        <div class="text-2xl">📋</div>
+        <div>
+            <div class="font-bold text-sm">Post text copied!</div>
+            <div class="text-xs text-slate-400" id="toastMsg">Image downloading... Paste text & upload image.</div>
+        </div>
     </div>
 
+    <!-- SCRIPT START -->
     <script>
-        // --- DATA ---
-        // Mapping of Shortnames/Plurals/Aliases to Canonical Kind
-        
+        // --- GAME LOGIC ---
+
         const resourceDB = {
             workloads: [
                 { kind: "Pod", aliases: ["po", "pods"] },
@@ -310,15 +270,12 @@
             });
         }
 
-        // --- STATE ---
         let score = 0;
         let foundSet = new Set();
         let timeLeft = 90;
         let timerInterval;
         let isPlaying = false;
         let currentUsername = "";
-        
-        // Category Counters
         let catCounts = { workloads: 0, network: 0, config: 0, cluster: 0, access: 0 };
         const catTotals = { 
             workloads: resourceDB.workloads.length, 
@@ -327,7 +284,6 @@
             cluster: resourceDB.cluster.length + resourceDB.access.length 
         };
 
-        // --- DOM ELEMENTS ---
         const inputEl = document.getElementById('resourceInput');
         const scoreEl = document.getElementById('score');
         const timerEl = document.getElementById('timer');
@@ -337,19 +293,12 @@
         const feedbackEl = document.getElementById('inputFeedback');
         const usernameInput = document.getElementById('usernameInput');
 
-        // --- GAME LOGIC ---
-
         function startGame() {
-            // Get Username
             currentUsername = usernameInput.value.trim() || "Cluster Admin";
-            
-            // Reset State
             score = 0;
             foundSet = new Set();
             timeLeft = 90;
             catCounts = { workloads: 0, network: 0, config: 0, cluster: 0, access: 0 };
-            
-            // UI Reset
             scoreEl.textContent = '0';
             timerEl.textContent = '90';
             timerEl.classList.remove('text-red-500');
@@ -361,21 +310,16 @@
             gameOverModal.classList.add('hidden');
             
             updateProgressBars();
-            
-            // Focus Input
             inputEl.focus();
             isPlaying = true;
 
-            // Start Timer
             timerInterval = setInterval(() => {
                 timeLeft--;
                 timerEl.textContent = timeLeft;
-                
                 if (timeLeft <= 10) {
                     timerEl.classList.remove('text-blue-400');
                     timerEl.classList.add('text-red-500');
                 }
-
                 if (timeLeft <= 0) {
                     endGame();
                 }
@@ -386,15 +330,6 @@
             clearInterval(timerInterval);
             isPlaying = false;
             inputEl.disabled = true;
-            
-            // Calculate Rank
-            // Ranks:
-            // 0-6: Beginner
-            // 7-13: Junior DevOps
-            // 14-20: Cluster Operator
-            // 21-27: K8s Engineer
-            // 28-34: Cloud Architect
-            // 35+: Kubernetes Maintainer
             
             const finalScore = foundSet.size;
             let rank = "Beginner";
@@ -477,7 +412,6 @@
 
         function addResourceCard(name, category) {
             const el = document.createElement('div');
-            
             let borderColor = 'border-slate-700';
             let icon = '📦';
             
@@ -492,44 +426,84 @@
                 <span class="font-bold text-slate-200">${name}</span>
                 <span class="opacity-20 text-xs group-hover:opacity-100 transition-opacity">${icon}</span>
             `;
-            
             resultsGrid.insertBefore(el, resultsGrid.firstChild);
         }
 
-        function getShareText() {
-            return `☸️ K8s Resource Blitz\nPlayer: ${currentUsername}\nScore: ${foundSet.size} resources in 90s\nRank: ${document.getElementById('rankTitle').textContent}\nPowered by korpro.io`;
-        }
+        // --- LINKEDIN SHARING LOGIC ---
+        
+        function generateScoreCard() {
+            const canvas = document.getElementById('scoreCanvas');
+            const ctx = canvas.getContext('2d');
+            const score = foundSet.size;
+            const rank = document.getElementById('rankTitle').textContent;
 
-        function copyToClipboard() {
-            const text = getShareText();
-            navigator.clipboard.writeText(text).then(() => {
-                showToast("Copied to clipboard!");
-            });
+            // Background
+            const grd = ctx.createLinearGradient(0, 0, 800, 400);
+            grd.addColorStop(0, "#0f172a");
+            grd.addColorStop(1, "#1e293b");
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, 800, 400);
+
+            // Border
+            ctx.strokeStyle = "#326CE5";
+            ctx.lineWidth = 10;
+            ctx.strokeRect(0, 0, 800, 400);
+
+            // Text
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 60px 'Courier New'";
+            ctx.textAlign = "center";
+            ctx.fillText("K8s Resource Blitz", 400, 100);
+
+            ctx.font = "bold 120px 'Courier New'";
+            ctx.fillStyle = "#326CE5";
+            ctx.fillText(score, 400, 240);
+
+            ctx.font = "bold 40px 'Courier New'";
+            ctx.fillStyle = "#94a3b8";
+            ctx.fillText(rank, 400, 310);
+            
+            ctx.font = "20px 'Courier New'";
+            ctx.fillStyle = "#64748b";
+            ctx.fillText("Powered by korpro.io", 400, 360);
+
+            // Download
+            const link = document.createElement('a');
+            link.download = `K8s-Blitz-Score-${score}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
         }
 
         function shareOnLinkedIn() {
-            const text = getShareText();
+            const score = foundSet.size;
+            const rank = document.getElementById('rankTitle').textContent;
+            const text = `🚀 Checkout my score on the Kubernetes Resource Blitz!\n\nI named ${score} K8s resources in 90 seconds and reached rank: ${rank}.\n\nHow well do you know your cluster?\n\n#Kubernetes #DevOps #K8s #CloudNative #KorproIO`;
+            
+            // 1. Copy Text
             navigator.clipboard.writeText(text).then(() => {
-                showToast("Score copied! Paste it in your LinkedIn post.");
+                showToast("Image downloading... Paste text & upload it!");
+                
+                // 2. Generate & Download Image (Fake Screenshot)
+                generateScoreCard();
+
+                // 3. Open LinkedIn
                 setTimeout(() => {
                     window.open('https://www.linkedin.com/feed/', '_blank');
-                }, 1000);
+                }, 1500);
             });
         }
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toastMsg').textContent = msg;
-            toast.classList.remove('translate-y-24');
+            toast.classList.remove('translate-y-32');
             setTimeout(() => {
-                toast.classList.add('translate-y-24');
-            }, 3000);
+                toast.classList.add('translate-y-32');
+            }, 5000);
         }
 
         inputEl.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                checkInput();
-            }
+            if (e.key === 'Enter' || e.key === ' ') checkInput();
         });
         
         inputEl.addEventListener('input', (e) => {
@@ -540,12 +514,11 @@
         });
 
         usernameInput.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') {
-                startGame();
-            }
+            if (e.key === 'Enter') startGame();
         });
 
     </script>
 </body>
 </html>
+
 
